@@ -54,9 +54,9 @@ func attemptEntry(w http.ResponseWriter, r *http.Request) {
 
 func doorCodeToTwilioTone(code string) string {
 	var builder strings.Builder
-	builder.Grow(len(code) * 2)
+	builder.Grow(len(code) * 4)
 	for _, c := range code {
-		fmt.Fprintf(&builder, "%cw", c)
+		fmt.Fprintf(&builder, "%c%c%cwww", c, c, c)
 	}
 	return builder.String()
 }
