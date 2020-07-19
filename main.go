@@ -2,8 +2,10 @@ package main
 
 import (
 	"encoding/xml"
+	"fmt"
 	"net/http"
 	"os"
+	"strings"
 
 	"frontdoor/types"
 
@@ -35,7 +37,7 @@ func attemptEntry(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	play := types.Play{Digits: "9w9w"}
+	play := types.Play{Digits: doorCodeToTwilioTone(os.Getenv("BUZZ_CODE"))}
 	var twiml types.TwiML
 	switch password := r.Form["Digits"][0]; password {
 	case os.Getenv("DELIVERY_PASSWORD"):
@@ -47,6 +49,15 @@ func attemptEntry(w http.ResponseWriter, r *http.Request) {
 	}
 
 	twilioWriter(twiml, w)
+}
+
+func doorCodeToTwilioTone(code string) string {
+	var builder strings.Builder
+	builder.Grow(len(code) * 2)
+	for _, c := range code {
+		fmt.Fprintf(&builder, "%cw", c)
+	}
+	return builder.String()
 }
 
 func getFullURI(pathEnvVar string) string {
