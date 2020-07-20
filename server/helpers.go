@@ -36,7 +36,7 @@ func sendNotifications(message string) {
 		logger.Println("Notified primary phone number: '" + message + "'")
 	}
 	if os.Getenv("SECONDARY_NOTIFY_NUMBER") != "" {
-		_, err := client.Messages.SendMessage(os.Getenv("TWILIO_PHONE_NUMBER"), os.Getenv("NOTIFY_PHONE_NUMBER"), message, nil)
+		_, err := client.Messages.SendMessage(os.Getenv("TWILIO_PHONE_NUMBER"), os.Getenv("SECONDARY_NOTIFY_NUMBER"), message, nil)
 		if err != nil {
 			logger.Println("Failed to send secondary notification SMS")
 			return
