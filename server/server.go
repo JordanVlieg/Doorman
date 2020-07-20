@@ -66,7 +66,7 @@ func StartServer() {
 	}
 	defer f.Close()
 
-	logger = log.New(f, "prefix", log.LstdFlags)
+	logger = log.New(f, "", log.LstdFlags)
 
 	http.HandleFunc(os.Getenv("KNOCK"), knock)
 	http.HandleFunc(os.Getenv("BEEP"), beepFile)
