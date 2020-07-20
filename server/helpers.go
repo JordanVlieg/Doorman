@@ -41,7 +41,7 @@ func sendNotifications(message string) {
 			logger.Println("Failed to send secondary notification SMS")
 			return
 		}
-		logger.Println("Notified primary phone number: '" + message + "'")
+		logger.Println("Notified secondary phone number: '" + message + "'")
 	}
 }
 
