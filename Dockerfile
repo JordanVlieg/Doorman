@@ -23,4 +23,4 @@ RUN go build -o main .
 CMD ["./main"]
 
 # Export necessary port
-EXPOSE 3000
+EXPOSE 80

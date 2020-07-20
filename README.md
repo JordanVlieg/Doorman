@@ -7,3 +7,6 @@ Settings are configured in the .env file.  This can be deployed to any hosting p
 Ensure you configure your twilio account to submit a GET request to the `/knock` endpoint.
 
 I have configured this to play the same buzz code tones repeatedly, this may not work in your case, edit the code in main.go
+
+### Common issues
+Dont forget to set your port the same in both the dockerfile and the env file, and expose it in your ec2 security group!
