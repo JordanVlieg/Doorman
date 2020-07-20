@@ -24,6 +24,27 @@ func getFullURI(pathEnvVar string) string {
 	return os.Getenv("BASE_URI") + os.Getenv(pathEnvVar)
 }
 
+func sendNotifications(message string) {
+	client := twilio_go.NewClient(os.Getenv("TWILIO_SID"), os.Getenv("TWILIO_AUTH_TOKEN"), nil)
+	// Send a message
+	if os.Getenv("NOTIFY_PHONE_NUMBER") != "" {
+		_, err := client.Messages.SendMessage(os.Getenv("TWILIO_PHONE_NUMBER"), os.Getenv("NOTIFY_PHONE_NUMBER"), message, nil)
+		if err != nil {
+			logger.Println("Failed to send notification SMS")
+			return
+		}
+		logger.Println("Notified primary phone number: '" + message + "'")
+	}
+	if os.Getenv("SECONDARY_NOTIFY_NUMBER") != "" {
+		_, err := client.Messages.SendMessage(os.Getenv("TWILIO_PHONE_NUMBER"), os.Getenv("NOTIFY_PHONE_NUMBER"), message, nil)
+		if err != nil {
+			logger.Println("Failed to send secondary notification SMS")
+			return
+		}
+		logger.Println("Notified primary phone number: '" + message + "'")
+	}
+}
+
 func twilioWriter(twiml types.TwiML, w http.ResponseWriter) {
 	x, err := xml.Marshal(twiml)
 	if err != nil {
@@ -38,7 +59,7 @@ func twilioWriter(twiml types.TwiML, w http.ResponseWriter) {
 
 func validateReqFromTwilio(w http.ResponseWriter, r *http.Request) bool {
 	if os.Getenv("DEVELOPMENT") != "true" {
-		err := twilio_go.ValidateIncomingRequest(os.Getenv("BASE_URI"), os.Getenv("AUTH_TOKEN"), r)
+		err := twilio_go.ValidateIncomingRequest(os.Getenv("BASE_URI"), os.Getenv("TWILIO_AUTH_TOKEN"), r)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusForbidden)
 			logger.Println(err.Error())

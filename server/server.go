@@ -45,12 +45,15 @@ func attemptEntry(w http.ResponseWriter, r *http.Request) {
 		case os.Getenv("DELIVERY_PASSWORD"):
 			logger.Println("Delivery person entered")
 			twiml = types.TwiML{Say: os.Getenv("DELIVERY_WELCOME"), Play: &play}
+			sendNotifications("Delivery person just entered the building")
 		case os.Getenv("PERSONAL_PASSWORD"):
 			logger.Println("Friend entered")
 			twiml = types.TwiML{Say: os.Getenv("PERSONAL_WELCOME"), Play: &play}
+			sendNotifications("A friend is here :)")
 		default:
 			logger.Println("Someone failed the password check with code: " + password)
 			twiml = types.TwiML{Say: os.Getenv("DENIED_MESSAGE")}
+			sendNotifications("Someone typed the wrong password for the building")
 		}
 
 		twilioWriter(twiml, w)
