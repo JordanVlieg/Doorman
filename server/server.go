@@ -63,7 +63,7 @@ func attemptEntry(w http.ResponseWriter, r *http.Request) {
 }
 
 func StartServer() {
-	f, err := os.OpenFile("text.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	f, err := os.OpenFile("/var/log/doorman.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		log.Println(err)
 	}
