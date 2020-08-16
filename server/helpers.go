@@ -13,9 +13,9 @@ import (
 
 func doorCodeToTwilioTone(code string) string {
 	var builder strings.Builder
-	builder.Grow(len(code) * 4)
+	builder.Grow(len(code) * 2)
 	for _, c := range code {
-		fmt.Fprintf(&builder, "%c%c%cwww", c, c, c)
+		fmt.Fprintf(&builder, "%cw", c)
 	}
 	return builder.String()
 }
