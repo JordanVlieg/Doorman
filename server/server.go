@@ -63,11 +63,16 @@ func attemptEntry(w http.ResponseWriter, r *http.Request) {
 }
 
 func StartServer() {
-	f, err := os.OpenFile("/var/log/doorman.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	if err != nil {
-		log.Println(err)
+	var f = &os.File{}
+	if os.Getenv("RAILWAY") == "true" {
+		f = os.Stdout
+	} else {
+		f, err := os.OpenFile("/var/log/doorman.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+		if err != nil {
+			log.Println(err)
+		}
+		defer f.Close()
 	}
-	defer f.Close()
 
 	logger = log.New(f, "", log.LstdFlags)
 
