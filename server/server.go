@@ -11,6 +11,7 @@ var logger *log.Logger
 
 func beepFile(w http.ResponseWriter, r *http.Request) {
 	if validateReqFromTwilio(w, r) {
+		logger.Println("Beeping.....")
 		http.ServeFile(w, r, "./resources/beep.mp3")
 	} else {
 		logger.Println("Non twilio request to beepFile")
@@ -64,7 +65,8 @@ func attemptEntry(w http.ResponseWriter, r *http.Request) {
 
 func StartServer() {
 	var f = &os.File{}
-	if os.Getenv("RAILWAY") == "true" {
+	var rw = os.Getenv("RAILWAY") == "true"
+	if rw {
 		f = os.Stdout
 	} else {
 		f, err := os.OpenFile("/var/log/doorman.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
@@ -75,6 +77,11 @@ func StartServer() {
 	}
 
 	logger = log.New(f, "", log.LstdFlags)
+	if rw {
+		logger.Println("Outputting logs to stdout")
+	} else {
+		logger.Println("Outputting logs to file")
+	}
 
 	http.HandleFunc(os.Getenv("KNOCK"), knock)
 	http.HandleFunc(os.Getenv("BEEP"), beepFile)
